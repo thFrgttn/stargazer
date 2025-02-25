@@ -165,13 +165,11 @@
       show-if-above
       v-model="rightDrawerOpen"
       side="right"
-      :width="drawerWidth"
+      :width="width"
       bordered
       :class="{ crt: crt }"
     >
       <!-- right drawer content -->
-      <div v-touch-pan.preserveCursor.prevent.mouse.horizontal="resizeDrawer" class="q-drawer__resizer"></div>
-
       <div class="row">
         <q-expansion-item class="col-12" id="oracles">
           <template v-slot:header>
@@ -423,11 +421,11 @@ export default defineComponent({
       showOracleLoad.value = false;
     };
 
-    // const width = computed((): number => {
-    //   return !$q.platform.is.ipad && ($q.screen.lt.sm || $q.platform.is.mobile)
-    //     ? Math.floor($q.screen.width * 0.9)
-    //     : Math.floor($q.screen.width * 0.4);
-    // });
+    const width = computed((): number => {
+      return !$q.platform.is.ipad && ($q.screen.lt.sm || $q.platform.is.mobile)
+        ? Math.floor($q.screen.width * 0.9)
+        : Math.floor($q.screen.width * 0.4);
+    });
     const btnSize = computed((): string => {
       return $q.screen.lt.sm ? 'sm' : 'md';
     });
@@ -449,9 +447,6 @@ export default defineComponent({
       }
     };
 
-    let initialDrawerWidth: number;
-    const drawerWidth = ref(Math.floor($q.screen.width * 0.5)); //ref(300);
-
     return {
       leftDrawerOpen,
       toggleLeftDrawer() {
@@ -462,15 +457,7 @@ export default defineComponent({
       toggleRightDrawer() {
         rightDrawerOpen.value = !rightDrawerOpen.value;
       },
-      //width,
-
-      drawerWidth,
-      resizeDrawer(ev: { isFirst: boolean; offset: { x: number } }) {
-        if (ev.isFirst === true) {
-          initialDrawerWidth = drawerWidth.value;
-        }
-        drawerWidth.value = initialDrawerWidth - ev.offset.x;
-      },
+      width,
 
       campaign,
       config,
@@ -527,13 +514,4 @@ export default defineComponent({
   margin-right: 10px
   text-shadow: 1px 1px 1px $dark
   color: darkgrey
-
-.q-drawer__resizer
-  position: absolute
-  top: 0
-  bottom: 0
-  left: -2px
-  width: 4px
-  background-color: #ECEFF4
-  cursor: ew-resize
 </style>
